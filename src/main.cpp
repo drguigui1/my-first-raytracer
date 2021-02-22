@@ -1,5 +1,3 @@
-#include "point.h"
-#include "vector3.h"
 #include "img.h"
 
 int main() {
@@ -12,4 +10,5 @@ int main() {
         }
     }
     img.SavePPM("test.ppm");
+    return 0;
 }

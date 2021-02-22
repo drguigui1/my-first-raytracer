@@ -23,7 +23,7 @@ void Image::SavePPM(std::string path) {
     for (int i = 0; i < this->n_rows; i++) {
         for (int j = 0; j < this->n_cols; j++) {
             auto c = this->get_pixel(i, j);
-            ofs << (char) c.red << (char) c.green << (char) c.blue;
+            ofs << (char) c.x << (char) c.y << (char) c.z;
         }
     }
 

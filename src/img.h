@@ -5,7 +5,7 @@
 #include <fstream>
 #include <cstdio>
 
-#include "color.h"
+#include "vector3.h"
 
 class Image {
     public:

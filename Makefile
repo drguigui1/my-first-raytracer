@@ -1,4 +1,4 @@
-SRC= src/img.cpp src/color.cpp src/main.cpp
+SRC= src/img.cpp src/vector3.cpp src/main.cpp
 
 all:
 	g++ $(SRC)
