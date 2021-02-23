@@ -10,7 +10,7 @@ class Ray {
         Point3 get_origin() const { return this->_origin; }
         Vector3 get_direction() const { return this->_direction; }
 
-        Point3 ray_at(float t);
+        Point3 ray_at(float t) const;
 
     private:
         Point3 _origin;

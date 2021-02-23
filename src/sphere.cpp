@@ -15,7 +15,7 @@ Sphere::Sphere() : _center(Point3(0, 0, 0)), _radius(1) {}
 ** So intersection between sphere and ray:
 ** t^2 * b.b + 2t*b.(A-C) + (A-C).(A-C) - r^2 = 0
 */
-bool Sphere::hit_sphere(const Ray &ray) {
+bool Sphere::hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts) const {
     auto diff = ray.get_origin() - this->_center;
 
     // compute a, b, c from ax^2 + bx + c = 0
@@ -25,5 +25,21 @@ bool Sphere::hit_sphere(const Ray &ray) {
 
     // compute delta
     auto delta = b * b - 4.0 * a * c;
-    return delta >= 0;
+
+    if (delta < 0) {
+        return false;
+    }
+    auto root = ((-b - sqrt(delta)) / (2.0 * a));
+    if (root < t_min || root > t_max) {
+        root = (-b + sqrt(delta) / (2.0 * a));
+        if (root < t_min || root > t_max) {
+            return false;
+        }
+    }
+
+    hit_pts.t = root;
+    hit_pts.p = ray.ray_at(root);
+    hit_pts.normal = (hit_pts.p - this->_center) / this->_radius;
+
+    return true;
 }

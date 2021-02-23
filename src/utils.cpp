@@ -13,7 +13,8 @@ Color ray_cast(const Ray &ray, Scene scene) {
     auto spheres = scene.get_spheres();
 
     // if the ray hit the sphere
-    if (spheres.size() != 0 && spheres[0].hit_sphere(ray)) {
+    auto hit_pts = Hit_point();
+    if (spheres.size() != 0 && spheres[0].hit(ray, -1, 5, hit_pts)) {
         return Color(192.0 / 255.0, 50.0 / 255.0, 190.0 / 255.0);
     }
 
