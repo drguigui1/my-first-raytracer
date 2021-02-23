@@ -34,7 +34,7 @@ struct Vector3 {
         return *this;
     }
 
-    float length();
+    float length() const;
 
     float x;
     float y;
@@ -44,13 +44,13 @@ struct Vector3 {
 using Point3 = Vector3;
 using Color = Vector3;
 
-std::ostream& operator<<(std::ostream& os, Vector3 vector3);
-Vector3 operator+(Vector3 v1, Vector3 v2);
-Vector3 operator-(Vector3 v1, Vector3 v2);
-Vector3 operator*(Vector3 v1, Vector3 v2);
-Vector3 operator*(Vector3 v, float val);
-Vector3 operator*(float val, Vector3 v);
-Vector3 operator/(Vector3 v, float val);
-float dot_product(Vector3 v1, Vector3 v2);
-Vector3 cross_product(Vector3 v1, Vector3 v2);
-Vector3 unit_vector(Vector3 v);
+std::ostream& operator<<(std::ostream& os, const Vector3 &vector3);
+Vector3 operator+(const Vector3 &v1, const Vector3 &v2);
+Vector3 operator-(const Vector3 &v1, const Vector3 &v2);
+Vector3 operator*(const Vector3 &v1, const Vector3 &v2);
+Vector3 operator*(const Vector3 &v, float val);
+Vector3 operator*(float val, const Vector3 &v);
+Vector3 operator/(const Vector3 &v, float val);
+float dot_product(const Vector3 &v1, const Vector3 &v2);
+Vector3 cross_product(const Vector3 &v1, const Vector3 &v2);
+Vector3 unit_vector(const Vector3 &v);

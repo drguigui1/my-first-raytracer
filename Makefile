@@ -1,7 +1,11 @@
-SRC= src/img.cpp src/vector3.cpp src/ray.cpp src/utils.cpp src/main.cpp
+SRC= src/img.cpp src/vector3.cpp src/ray.cpp src/utils.cpp
+MAIN= src/main.cpp
 
 all:
-	g++ $(SRC)
+	g++ $(SRC) $(MAIN)
+
+debug:
+	g++ -g $(SRC) $(MAIN)
 
 clean:
 	rm a.out

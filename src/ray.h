@@ -7,8 +7,8 @@ class Ray {
         Ray() {}
         Ray(Point3 origin, Vector3 direction);
 
-        Point3 get_origin() { return this->_origin; }
-        Vector3 get_direction() { return this->_direction; }
+        Point3 get_origin() const { return this->_origin; }
+        Vector3 get_direction() const { return this->_direction; }
 
         Point3 ray_at(float t);
 
