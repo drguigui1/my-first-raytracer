@@ -1,8 +1,13 @@
 #include "img.h"
-#include "ray.h"
+#include "scene.h"
 #include "utils.h"
 
 int main() {
+    // scene
+    // create sphere
+    auto sphere = Sphere(Point3(0, 0, -1.5), 0.6);
+    auto scene = Scene(sphere);
+
     // image
     const auto aspect_ratio = 16.0 / 9.0;
     const int img_width = 400;
@@ -26,7 +31,7 @@ int main() {
             auto step_w = float(i) / (img_width - 1);
             auto step_h = float(j) / (img_height - 1);
             auto ray = Ray(origin, lower_left_corner + step_w * horizontal + step_h * vertical - origin);
-            Color c = ray_color_background(ray);
+            Color c = ray_cast(ray, scene);
             auto proper_c = from_float_color_to_int(c);
             img.set_pixel(j, i, proper_c);
         }

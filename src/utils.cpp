@@ -1,11 +1,5 @@
 #include "utils.h"
 
-Color ray_color_background(const Ray &ray) {
-    Vector3 unit_dir = unit_vector(ray.get_direction());
-    auto tmp = 0.5 * (-unit_dir.y + 1.0);
-    return (1.0 - tmp) * Color(1.0, 1.0, 1.0) + tmp * Color(0.5, 0.7, 1.0);
-}
-
 // Convert float color to int color (0-255)
 Color from_float_color_to_int(Color c) {
     auto r = static_cast<int>(255.999 * c.x);
@@ -13,4 +7,17 @@ Color from_float_color_to_int(Color c) {
     auto b = static_cast<int>(255.999 * c.z);
 
     return Color(r, g, b);
+}
+
+Color ray_cast(const Ray &ray, Scene scene) {
+    auto spheres = scene.get_spheres();
+
+    // if the ray hit the sphere
+    if (spheres.size() != 0 && spheres[0].hit_sphere(ray)) {
+        return Color(192.0 / 255.0, 50.0 / 255.0, 190.0 / 255.0);
+    }
+
+    Vector3 unit_dir = unit_vector(ray.get_direction());
+    auto tmp = 0.5 * (-unit_dir.y + 1.0);
+    return (1.0 - tmp) * Color(1.0, 1.0, 1.0) + tmp * Color(0.5, 0.7, 1.0);
 }
