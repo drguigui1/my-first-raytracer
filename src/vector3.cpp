@@ -4,6 +4,16 @@ float Vector3::length() const {
     return std::sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
 }
 
+bool Vector3::is_zeros() {
+    auto l = 1e-8;
+    if (abs(this->x) < l &&
+        abs(this->y) < l &&
+        abs(this->z) < l) {
+        return true;
+    }
+    return false;
+}
+
 std::ostream& operator<<(std::ostream& os, const Vector3 &vector3) {
     os << "Vector3: \n";
     os << "x: " << vector3.x << "\ny: " << vector3.y << "\nz: " << vector3.z << '\n' ;
@@ -46,4 +56,21 @@ Vector3 cross_product(const Vector3 &v1, const Vector3 &v2) {
 
 Vector3 unit_vector(const Vector3 &v) {
     return v / v.length(); 
+}
+
+Vector3 sqrt_vector(const Vector3 &v) {
+    return Vector3(sqrt(v.x), sqrt(v.y), sqrt(v.z));
+}
+
+Vector3 reflect(const Vector3 &v1, const Vector3 &v2) {
+    return v1 - 2.0 * dot_product(v1, v2) * v2;
+}
+
+// mult the vector by 9 element matrix (3x3 flatten)
+// rotate point
+Vector3 mult_by_mat(float* m, Vector3 &v) {
+    float new_x = m[0] * v.x + m[1] * v.y + m[2] * v.z;
+    float new_y = m[3] * v.x + m[4] * v.y + m[5] * v.z;
+    float new_z = m[6] * v.x + m[7] * v.y + m[8] * v.z;
+    return Vector3(new_x, new_y, new_z);
 }

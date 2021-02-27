@@ -7,4 +7,6 @@ struct Hit_point {
     Point3 p;
     Vector3 normal;
     float t;
+    int sphere_idx;
+    bool has_hit;
 };

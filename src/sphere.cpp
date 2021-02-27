@@ -1,8 +1,14 @@
 #include "sphere.h"
 
-Sphere::Sphere(Point3 center, float radius) : _center(center), _radius(radius) {}
+Sphere::Sphere(Point3 center, float radius, Color color, float diffuse, float reflect)
+    :
+    _center(center),
+    _radius(radius),
+    _color(color),
+    _diffuse_property(diffuse),
+    _reflect_property(reflect) {}
 
-Sphere::Sphere() : _center(Point3(0, 0, 0)), _radius(1) {}
+Sphere::Sphere() : _center(Point3(0, 0, 0)), _radius(1), _color(Color()) {}
 
 
 /*

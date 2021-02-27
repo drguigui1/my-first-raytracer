@@ -35,6 +35,7 @@ struct Vector3 {
     }
 
     float length() const;
+    bool is_zeros();
 
     float x;
     float y;
@@ -54,3 +55,6 @@ Vector3 operator/(const Vector3 &v, float val);
 float dot_product(const Vector3 &v1, const Vector3 &v2);
 Vector3 cross_product(const Vector3 &v1, const Vector3 &v2);
 Vector3 unit_vector(const Vector3 &v);
+Vector3 sqrt_vector(const Vector3 &v);
+Vector3 reflect(const Vector3 &v1, const Vector3 &v2);
+Vector3 mult_by_mat(float* m, Vector3 &v);

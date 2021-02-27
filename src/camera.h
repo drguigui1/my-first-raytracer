@@ -1,32 +1,71 @@
 #pragma once
 
+#include <math.h>
 #include "ray.h"
 
 class Camera {
     public:
-        Camera(float ratio, float window_height, float focal_length, Point3 origin) {
-            this->_ratio = ratio;
-            this->_window_height = window_height;
-            this->_window_width = window_height * ratio;
-            this->_focal_length = focal_length;
+        Camera(float aspect_ratio, float field_of_view, int img_width, int img_height, Point3 origin, float theta_x, float theta_y, float theta_z) {
+            this->_aspect_ratio = aspect_ratio;
             this->_origin = origin;
-            this->_horizontal = Vector3(_window_width, 0.0, 0.0);
-            this->_vertical = Vector3(0.0, _window_height, 0.0);
-            auto z_vec = Vector3(0.0, 0.0, focal_length);
-            this->_lower_left_corner = origin - this->_horizontal / 2.0 - this->_vertical / 2.0 - z_vec;
+            this->_field_of_view = field_of_view;
+            this->_img_width = img_width;
+            this->_img_height = img_height;
+
+            // build the rotation matrix
+            this->_rotation_x = new float[9];
+            this->_rotation_y = new float[9];
+            this->_rotation_z = new float[9];
+
+            float mat_x_rotation[9] = {1.0, 0.0, 0.0, 0.0, cos(theta_x), -sin(theta_x), 0.0, sin(theta_x), cos(theta_x)};
+            float mat_y_rotation[9] = {cos(theta_y), 0.0, sin(theta_y), 0.0, 1.0, 0.0, -sin(theta_y), 0.0, cos(theta_y)};
+            float mat_z_rotation[9] = {cos(theta_z), -sin(theta_z), 0.0, sin(theta_z), cos(theta_z), 0.0, 0.0, 0.0, 1.0};
+
+            for (int i = 0; i < 9; i++) {
+                this->_rotation_x[i] = mat_x_rotation[i];
+                this->_rotation_y[i] = mat_y_rotation[i];
+                this->_rotation_z[i] = mat_z_rotation[i];
+            }
         }
 
-        Ray create_ray(float step_w, float step_h) {
-            return Ray(this->_origin, this->_lower_left_corner + step_w * this->_horizontal + step_h * this->_vertical - this->_origin);
+        ~Camera() {
+            delete[] this->_rotation_x;
+            delete[] this->_rotation_y;
+            delete[] this->_rotation_z;
         }
+
+        // Convert the pixel point from raster point to world point
+        // Then create the ray
+        // i : pixel column wise
+        // j : pixel row wise
+        Ray create_ray(float i, float j) {
+            float px = (2.0 * (i + 0.5) / (float)this->_img_width - 1.0) * tan(this->_field_of_view * 0.5); 
+            float py = (1.0 - 2.0 * (j + 0.5) / (float)this->_img_height) * tan(this->_field_of_view * 0.5) * 1.0 / this->_aspect_ratio;
+
+            float pz = -1.0;
+            auto ray_dir = Vector3(px, py, pz);
+            ray_dir = unit_vector(ray_dir);
+
+            // rotate the vector if necessary
+            // rotation on x / y / z
+            ray_dir = mult_by_mat(this->_rotation_x, ray_dir);
+            ray_dir = mult_by_mat(this->_rotation_y, ray_dir);
+            ray_dir = mult_by_mat(this->_rotation_z, ray_dir);
+
+            return Ray(this->_origin, ray_dir);
+        }
+
+        // Ray create_ray(float step_w, float step_h) {
+        //     return Ray(this->_origin, this->_lower_left_corner + step_w * this->_horizontal + step_h * this->_vertical - this->_origin);
+        // }
 
     private:
-        float _ratio;
-        float _focal_length;
-        float _window_height;
-        float _window_width;
+        float _aspect_ratio;
+        float _field_of_view; // must be converted in radian
+        int _img_width;
+        int _img_height;
         Point3 _origin;
-        Point3 _lower_left_corner;
-        Vector3 _horizontal;
-        Vector3 _vertical;
+        float* _rotation_x; // size 9
+        float* _rotation_y; // size 9
+        float* _rotation_z; // size 9
 };
