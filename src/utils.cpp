@@ -56,43 +56,11 @@ Hit_point hit_objects(Scene scene, const Ray &ray) {
 
     for (int i = 0; i < spheres.size(); i++) {
         if (spheres[i].hit(ray, 0.001, closest_hit_point, hit_pts)) {
-            hit_pts.sphere_idx = i; // maybe remove
             hit_pts.has_hit = true;
         }
     }
     return hit_pts;
 }
-
-// Color compute_intensity(Scene &scene, Hit_point &hit_pts, const Ray &input_ray, Ray &reflected_ray) {
-//     // reflected dir
-//     Vector3 reflected_dir = unit_vector(reflect(input_ray.get_direction(), hit_pts.normal));
-//     Point3 reflected_origin = dot(reflect_dir, hit_pts.normal) < 0 ? hit_pts.p - hit_pts.normal * 1e-3 : hit_pts.p - hit_pts.normal * 1e-3;
-//     // TODO reflraction
-
-//     // recursive calls
-
-//     Color intensity = Color();
-//     for (int i = 0; i < lights.size(); i++) {
-//         auto L = Ray(hit_pts.p, unit_vector(lights[i].get_position() - hit_pts.p));
-//         auto hit_pts2 = hit_objects(scene, L);
-//         if (hit_pts2.has_hit) {
-//             continue;
-//         }
-
-//         // compute diffuse component
-//         Color diffuse = sphere.get_diffuse_property() * sphere.get_color() * dot_product(hit_pts.normal, L.get_direction()) * lights[i].get_intensity();
-//         // compute specular component
-//         auto ns = sphere.get_ns();
-//         auto reflect_vec = reflect(input_ray.get_direction(), hit_pts.normal);
-//         reflect_vec = unit_vector(reflect_vec);
-//         reflected_ray = Ray(hit_pts.p, reflect_vec);
-//         //Color specular = sphere.get_reflect_property() * lights[i].get_intensity() * powf(dot_product(reflect_vec, L.get_direction()), ns);
-//         //intensity = intensity + diffuse + specular;
-//         intensity = intensity + diffuse;
-//     }
-
-//     return intensity;
-// }
 
 Color ray_cast(const Ray &ray, Scene scene, int depth) {
     if (depth == 0) {
