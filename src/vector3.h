@@ -61,4 +61,11 @@ Vector3 sqrt_vector(const Vector3 &v);
 // v2: normal vector
 Vector3 reflect(const Vector3 &v1, const Vector3 &v2);
 
+// v1: input direction vector ray
+// v2: normal vector
+// n1: refraction index of the object that the ray hit
+// n2: refraction index outside of the object (usually 1)
+// n2 is the index of refraction of the medium the ray is in before entering the second medium
+Vector3 refract(const Vector3 &v1, const Vector3 &v2, float n1, float n2);
+
 Vector3 mult_by_mat(float* m, Vector3 &v);

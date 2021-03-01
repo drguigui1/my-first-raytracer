@@ -80,11 +80,12 @@ Color ray_cast(const Ray &ray, Scene scene, int depth) {
     // reflected dir
     Vector3 reflected_dir = unit_vector(reflect(ray.get_direction(), hit_pts.normal));
     Point3 reflected_origin = dot_product(reflected_dir, hit_pts.normal) < 0 ? hit_pts.p - hit_pts.normal * 1e-3 : hit_pts.p - hit_pts.normal * 1e-3;
-    // TODO refraction
+    Vector3 refracted_dir = unit_vector(refract(ray.get_direction(), hit_pts.normal, hit_pts.material.refraction_index, 1.0));
+    Point3 refracted_origin = dot_product(refracted_dir, hit_pts.normal) < 0 ? hit_pts.p - hit_pts.normal * 1e-3 : hit_pts.p - hit_pts.normal * 1e-3;
 
     // recursive calls
     Color reflected_color = ray_cast(Ray(reflected_origin, reflected_dir), scene, depth - 1);
-    // TODO recursive call for refraction
+    Color refracted_color = ray_cast(Ray(refracted_origin, refracted_dir), scene, depth - 1);
 
     // compute diffuse / specular and refraction components
     float diffuse_intensity_tmp = 0;
@@ -111,7 +112,7 @@ Color ray_cast(const Ray &ray, Scene scene, int depth) {
     auto diffuse_intensity =  hit_pts.material.color * diffuse_intensity_tmp * hit_pts.material.albedo_diffuse;
     auto specular_intensity = specular_intensity_tmp * hit_pts.material.albedo_specular;
     auto reflected_c = reflected_color * hit_pts.material.albedo_specular_color;
-    // TODO refraction
+    auto refracted_c = refracted_color * hit_pts.material.albedo_refraction;
 
-    return diffuse_intensity + Vector3(1.0, 1.0, 1.0) * specular_intensity + reflected_c;
+    return diffuse_intensity + Vector3(1.0, 1.0, 1.0) * specular_intensity + reflected_c + refracted_c;
 }

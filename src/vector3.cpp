@@ -66,6 +66,28 @@ Vector3 reflect(const Vector3 &v1, const Vector3 &v2) {
     return v1 - 2.0 * dot_product(v1, v2) * v2;
 }
 
+Vector3 refract(const Vector3 &v1, const Vector3 &v2, float n1, float n2) {
+    // dot product between v1 v2
+    auto dot_p = dot_product(v1, v2);
+    if (dot_p > 1.0)
+        dot_p = 1.0;
+    if (dot_p < -1.0)
+        dot_p = -1.0;
+
+    Vector3 normal = v2;
+    if (dot_p < 0) { // means that the ray comes from inside the object
+        dot_p = -dot_p;
+        normal = -normal;
+        std::swap(n1, n2);
+    }
+    auto ratio_n = n2 / n1;
+    float k = 1 - ratio_n * ratio_n * (1 - dot_p * dot_p);
+    if (k < 0) {
+        return Vector3(1, 0, 0);
+    }
+    return v1 * ratio_n + v1 * (ratio_n * dot_p - sqrt(k));
+}
+
 // mult the vector by 9 element matrix (3x3 flatten)
 // rotate point
 Vector3 mult_by_mat(float* m, Vector3 &v) {

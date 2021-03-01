@@ -11,17 +11,19 @@ int main() {
     auto metal_deep = Material(1.0, Color(0.09, 0.09, 0.09), 500.0, std::tuple<float, float, float, float>(0.3, 5.0, 0.5, 0.0));
     auto mat_color_red = Material(1.0, Color(0.51, 0.14, 0.13), 5.0, std::tuple<float, float, float, float>(0.9, 0.1, 0.1, 0.0));
     auto mat_color_blue = Material(1.0, Color(0.31, 0.8, 0.82), 5.0, std::tuple<float, float, float, float>(0.9, 0.1, 0.1, 0.0));
+    auto refract = Material(1.5, Color(0.31, 0.8, 0.82), 125.0, std::tuple<float, float, float, float>(0.0, 0.5, 0.1, 0.8));
+
 
     // scene
     std::vector<Sphere> spheres;
     spheres.push_back(Sphere(Point3(0, -101.5, 1.0), 100, metal_deep));
-    spheres.push_back(Sphere(Point3(0.0, -0.7, -3), 0.6, ivory));
-    spheres.push_back(Sphere(Point3(1.5, -0.7, -3), 0.6, mirror));
-    spheres.push_back(Sphere(Point3(-1.5, -0.7, -3), 0.6, metal));
+    spheres.push_back(Sphere(Point3(0.0, -0.9, -3), 0.6, refract));
+    spheres.push_back(Sphere(Point3(1.5, -0.9, -3), 0.6, mirror));
+    spheres.push_back(Sphere(Point3(-1.5, -0.9, -3), 0.6, metal));
 
-    spheres.push_back(Sphere(Point3(-0.2, -0.9, -2), 0.3, ground));
-    spheres.push_back(Sphere(Point3(-1.3, -0.9, -2), 0.3, mat_color_red));
-    spheres.push_back(Sphere(Point3(2.2, -0.9, -2), 0.3, mat_color_blue));
+    spheres.push_back(Sphere(Point3(-0.2, -1.3, -2), 0.3, ground));
+    spheres.push_back(Sphere(Point3(-1.3, -1.3, -2), 0.3, mat_color_red));
+    spheres.push_back(Sphere(Point3(2.2, -1.3, -2), 0.3, mat_color_blue));
 
     std::vector<Light> lights;
     lights.push_back(Light(Point3(-2.2, 3.5, -1.0), 1.2));
