@@ -8,7 +8,7 @@ int main() {
     auto ivory = Material(1.0, Color(0.81, 0.29, 0.17), 50.0, std::tuple<float, float, float, float>(0.6,  0.3, 0.1, 0.0));
     auto mirror = Material(1.0, Color(0.9, 0.9, 0.9), 1425.0, std::tuple<float, float, float, float>(0.0, 10.0, 0.8, 0.0));
     auto metal = Material(1.0, Color(0.15, 0.15, 0.15), 50.0, std::tuple<float, float, float, float>(0.8, 1.0, 0.2, 0.0));
-    auto metal_deep = Material(1.0, Color(0.09, 0.09, 0.09), 500.0, std::tuple<float, float, float, float>(0.3, 5.0, 0.5, 0.0));
+    auto metal_deep = Material(1.0, Color(0.05, 0.05, 0.05), 500.0, std::tuple<float, float, float, float>(0.3, 5.0, 0.5, 0.0));
     auto mat_color_red = Material(1.0, Color(0.51, 0.14, 0.13), 5.0, std::tuple<float, float, float, float>(0.9, 0.1, 0.1, 0.0));
     auto mat_color_blue = Material(1.0, Color(0.31, 0.8, 0.82), 5.0, std::tuple<float, float, float, float>(0.9, 0.1, 0.1, 0.0));
     auto refract = Material(1.5, Color(0.31, 0.8, 0.82), 125.0, std::tuple<float, float, float, float>(0.0, 0.5, 0.1, 0.8));
@@ -16,37 +16,40 @@ int main() {
 
     // scene
     std::vector<Sphere> spheres;
-    spheres.push_back(Sphere(Point3(0, -101.5, 1.0), 100, metal_deep));
-    spheres.push_back(Sphere(Point3(0.0, -0.9, -3), 0.6, refract));
-    spheres.push_back(Sphere(Point3(1.5, -0.9, -3), 0.6, mirror));
-    spheres.push_back(Sphere(Point3(-1.5, -0.9, -3), 0.6, metal));
+    // spheres.push_back(Sphere(Point3(0, -101.5, 1.0), 100, metal_deep));
+    spheres.push_back(Sphere(Point3(0.0, -0.3, -3), 0.6, mat_color_red));
+    spheres.push_back(Sphere(Point3(1.5, -0.3, -3), 0.6, mirror));
+    spheres.push_back(Sphere(Point3(-1.5, -0.3, -3), 0.6, metal));
 
-    spheres.push_back(Sphere(Point3(-0.2, -1.3, -2), 0.3, ground));
-    spheres.push_back(Sphere(Point3(-1.3, -1.3, -2), 0.3, mat_color_red));
-    spheres.push_back(Sphere(Point3(2.2, -1.3, -2), 0.3, mat_color_blue));
+    spheres.push_back(Sphere(Point3(-0.2, -0.6, -1.5), 0.3, ground));
+    spheres.push_back(Sphere(Point3(-1.3, -0.6, -1.5), 0.3, ivory));
+    spheres.push_back(Sphere(Point3(1.2, -0.6, -1.5), 0.3, mat_color_blue));
+
+    std::vector<Plane> planes;
+    auto range_x = std::tuple<float, float>{-4.0, 4.0};
+    auto range_y = std::tuple<float, float>{-1.0, 0.0}; // useless
+    auto range_z = std::tuple<float, float>{-8.0, 0.0};
+    planes.push_back(Plane(Point3(0.0, -0.9, -4.0), Vector3(0.0, 1.0, 0.0), metal_deep, range_x, range_y, range_z));
 
     std::vector<Light> lights;
-    lights.push_back(Light(Point3(-2.2, 3.5, -1.0), 1.2));
-    lights.push_back(Light(Point3(2.0, 3.5, -1.0), 1.2));
-    lights.push_back(Light(Point3(0.0, 3.5, -1.0), 1.2));
+    lights.push_back(Light(Point3(-2.2, 3.5, -1.0), 0.9));
+    lights.push_back(Light(Point3(2.0, 3.5, -1.0), 0.9));
+    lights.push_back(Light(Point3(0.0, 3.5, -1.0), 0.9));
 
-    auto scene = Scene(spheres, lights);
-
-    const int ray_per_pixel = 50;
+    auto scene = Scene(spheres, planes, lights);
 
     // image
-    const int img_width = 1040;
-    const int img_height = 880;
+    const int img_width = 840;
+    const int img_height = 680;
     const int aspect_ratio = float(img_width) / float(img_height);
     Image img = Image(img_height, img_width);
 
     // camera
-    float field_of_view = M_PI / 2; // pi / 2
-    //Camera camera(aspect_ratio, field_of_view, img_width, img_height, Point3(0.0, 2.0, -1.0), -M_PI / 4.0, 0.0, 0.0);
-    Camera camera(aspect_ratio, field_of_view, img_width, img_height, Point3(0.0, 2.4, 0.0), -M_PI / 4.0, 0.0, 0.0);
+    float field_of_view = M_PI / 2;
+    Camera camera(aspect_ratio, field_of_view, img_width, img_height, Point3(0.0, 2.0, 0.0), -M_PI / 4.0, 0.0, 0.0);
 
     // number of ray per pixel
-    float n_rays_per_pixel = 10;
+    float n_rays_per_pixel = 20;
 
     std::cout << "height: " << img_height << '\n';
     for (int j = 0; j < img_height; j++) {
