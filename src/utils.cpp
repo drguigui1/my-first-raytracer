@@ -72,19 +72,25 @@ Hit_point hit_objects(Scene scene, const Ray &ray) {
     return hit_pts;
 }
 
-Color ray_cast(const Ray &ray, Scene scene, int depth) {
+Color ray_cast(const Ray &ray, Scene scene, int depth, int i, int j) {
     if (depth == 0) {
-        return Color(0.2, 0.7, 0.8);
+        return Color(0.2, 0.7, 0.8); // maybe change
     }
 
     auto hit_pts = hit_objects(scene, ray);
 
     if (!hit_pts.has_hit) {
+        auto background = scene.get_background_rgb();
+        auto background_pixels = background.get_pixels();
+        auto r = float(background_pixels[i * background.get_width() + j]) / 255.0;
+        auto g = float(background_pixels[i * background.get_width() + j + 1]) / 255.0;
+        auto b = float(background_pixels[i * background.get_width() + j + 2]) / 255.0;
+        return Color(r, g, b);
+
         // background
-        //return Color(0.2, 0.2, 0.2);
-        Vector3 unit_dir = unit_vector(ray.get_direction());
-        auto tmp = 0.5 * (unit_dir.y + 1.0);
-        return (1.0 - tmp) * Color(1.0, 1.0, 1.0) + tmp * Color(0.5, 0.7, 1.0);
+        // Vector3 unit_dir = unit_vector(ray.get_direction());
+        // auto tmp = 0.5 * (unit_dir.y + 1.0);
+        // return (1.0 - tmp) * Color(1.0, 1.0, 1.0) + tmp * Color(0.5, 0.7, 1.0);
     }
 
     // reflected dir
@@ -94,8 +100,8 @@ Color ray_cast(const Ray &ray, Scene scene, int depth) {
     Point3 refracted_origin = dot_product(refracted_dir, hit_pts.normal) < 0 ? hit_pts.p - hit_pts.normal * 1e-3 : hit_pts.p + hit_pts.normal * 1e-3;
 
     // recursive calls
-    Color reflected_color = ray_cast(Ray(reflected_origin, reflected_dir), scene, depth - 1);
-    Color refracted_color = ray_cast(Ray(refracted_origin, refracted_dir), scene, depth - 1);
+    Color reflected_color = ray_cast(Ray(reflected_origin, reflected_dir), scene, depth - 1, i, j);
+    Color refracted_color = ray_cast(Ray(refracted_origin, refracted_dir), scene, depth - 1, i, j);
 
     // compute diffuse / specular and refraction components
     float diffuse_intensity_tmp = 0;
