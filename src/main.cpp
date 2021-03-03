@@ -41,13 +41,13 @@ int main() {
 
     // image
     const int img_width = 1000;
-    const int img_height = 700;
+    const int img_height = 800;
     const int aspect_ratio = float(img_width) / float(img_height);
     Image img = Image(img_height, img_width);
 
     // camera
     float field_of_view = M_PI / 2;
-    Camera camera(aspect_ratio, field_of_view, img_width, img_height, Point3(0.0, 2.0, 0.0), -M_PI / 4.0, 0.0, 0.0);
+    Camera camera(aspect_ratio, field_of_view, img_width, img_height, Point3(0.0, 3.0, 0.0), -M_PI / 4.0, 0.0, 0.0);
 
     // number of ray per pixel
     float n_rays_per_pixel = 10;

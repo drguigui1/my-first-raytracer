@@ -74,23 +74,25 @@ Hit_point hit_objects(Scene scene, const Ray &ray) {
 
 Color ray_cast(const Ray &ray, Scene scene, int depth, int i, int j) {
     if (depth == 0) {
-        return Color(0.2, 0.7, 0.8); // maybe change
+        return Color(0.0, 0.0, 0.0); // maybe change
     }
 
     auto hit_pts = hit_objects(scene, ray);
 
-    if (!hit_pts.has_hit) {
+    if (!hit_pts.has_hit && depth == 3) {
         auto background = scene.get_background_rgb();
         auto background_pixels = background.get_pixels();
-        auto r = float(background_pixels[i * background.get_width() + j]) / 255.0;
-        auto g = float(background_pixels[i * background.get_width() + j + 1]) / 255.0;
-        auto b = float(background_pixels[i * background.get_width() + j + 2]) / 255.0;
+        auto r = float(background_pixels[i * background.get_width() * 3 + j * 3]) / 255.0;
+        auto g = float(background_pixels[i * background.get_width() * 3 + j * 3 + 1]) / 255.0;
+        auto b = float(background_pixels[i * background.get_width() * 3 + j * 3 + 2]) / 255.0;
         return Color(r, g, b);
+    }
 
+    if (!hit_pts.has_hit) {
         // background
-        // Vector3 unit_dir = unit_vector(ray.get_direction());
-        // auto tmp = 0.5 * (unit_dir.y + 1.0);
-        // return (1.0 - tmp) * Color(1.0, 1.0, 1.0) + tmp * Color(0.5, 0.7, 1.0);
+        Vector3 unit_dir = unit_vector(ray.get_direction());
+        auto tmp = 0.5 * (unit_dir.y + 1.0);
+        return (1.0 - tmp) * Color(1.0, 1.0, 1.0) + tmp * Color(0.5, 0.7, 1.0);
     }
 
     // reflected dir
