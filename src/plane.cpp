@@ -44,6 +44,7 @@ bool Plane::hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts) {
     }
 
     // get the point using t
+    t -= 1e-4;
     Point3 intersect_pts = ray.ray_at(t);
 
     // Check if the point is in the range
@@ -58,6 +59,7 @@ bool Plane::hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts) {
     hit_pts.t = t;
     hit_pts.p = intersect_pts;
     hit_pts.material = this->_material;
+    hit_pts.hit_type = PLANE;
 
     return true;
 }

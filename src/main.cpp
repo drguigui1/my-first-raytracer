@@ -17,37 +17,52 @@ int main() {
 
     // scene
     std::vector<Sphere> spheres;
-    // spheres.push_back(Sphere(Point3(0, -101.5, 1.0), 100, metal_deep));
-    spheres.push_back(Sphere(Point3(0.0, -0.3, -3), 0.6, mat_color_red));
-    spheres.push_back(Sphere(Point3(1.5, -0.3, -3), 0.6, mirror));
-    spheres.push_back(Sphere(Point3(-1.5, -0.3, -3), 0.6, metal));
+    // //spheres.push_back(Sphere(Point3(0.0, -0.3, -3.8), 0.6, mat_color_red));
+    // spheres.push_back(Sphere(Point3(1.5, -0.25, -3.8), 0.6, mirror));
+    // spheres.push_back(Sphere(Point3(-1.5, -0.25, -3.8), 0.6, metal));
 
-    spheres.push_back(Sphere(Point3(-0.2, -0.6, -1.5), 0.3, ground));
-    spheres.push_back(Sphere(Point3(-1.3, -0.6, -1.5), 0.3, ivory));
-    spheres.push_back(Sphere(Point3(1.2, -0.6, -1.5), 0.3, mat_color_blue));
+    // // spheres.push_back(Sphere(Point3(-0.2, -0.6, -1.9), 0.3, ground));
+    // spheres.push_back(Sphere(Point3(-1.3, -0.5, -1.9), 0.3, mat_color_blue));
+    // // spheres.push_back(Sphere(Point3(1.2, -0.6, -1.9), 0.3, ivory));
 
     std::vector<Plane> planes;
     auto range_x = std::tuple<float, float>{-3.5, 3.5};
-    auto range_y = std::tuple<float, float>{-1.0, 0.0}; // useless
+    auto range_y = std::tuple<float, float>{-1.0, 0.0}; // useless in this case
     auto range_z = std::tuple<float, float>{-6.0, -1.0};
-    planes.push_back(Plane(Point3(0.0, -0.9, -3.5), Vector3(0.0, 1.0, 0.0), metal_deep, range_x, range_y, range_z));
+    planes.push_back(Plane(Point3(0.0, -0.9, -3.5), Vector3(0.0, 1.0, 0.0), ground, range_x, range_y, range_z));
+
+    std::vector<AABB_cube> aabb_cubes;
+    // auto llp = Point3(0.7, -0.8, -1.7);
+    // auto urp = Point3(1.5, 0.0, -2.5);
+    // aabb_cubes.push_back(AABB_cube(llp, urp, metal_deep));
+
+    // auto llp2 = Point3(-0.3, -0.8, -3.1);
+    // auto urp2 = Point3(0.3, -0.2, -3.7);
+    // aabb_cubes.push_back(AABB_cube(llp2, urp2, mat_color_red));
+
+    std::vector<Triangle> triangles;
+    auto p1 = Point3(0.0, 0.0, -3.0);
+    auto p2 = Point3(0.0, 2.0, -3.0);
+    auto p3 = Point3(2.0, 0.0, -3.0);
+    auto tr = Triangle(p1, p2, p3, mat_color_blue);
+    triangles.push_back(tr);
 
     std::vector<Light> lights;
     lights.push_back(Light(Point3(-2.2, 3.5, -1.0), 0.9));
-    lights.push_back(Light(Point3(2.0, 3.5, -1.0), 0.9));
-    lights.push_back(Light(Point3(0.0, 3.5, -1.0), 0.9));
+    //lights.push_back(Light(Point3(0.0, 3.5, 0.0), 0.9));
+    lights.push_back(Light(Point3(5.0, 3.5, -1.0), 0.9));
 
-    auto scene = Scene(spheres, planes, lights, background_img_path);
+    auto scene = Scene(spheres, planes, aabb_cubes, triangles, lights, background_img_path);
 
     // image
-    const int img_width = 1000;
-    const int img_height = 800;
+    const int img_width = 600;
+    const int img_height = 500;
     const int aspect_ratio = float(img_width) / float(img_height);
     Image img = Image(img_height, img_width);
 
     // camera
     float field_of_view = M_PI / 2;
-    Camera camera(aspect_ratio, field_of_view, img_width, img_height, Point3(0.0, 3.0, 0.0), -M_PI / 4.0, 0.0, 0.0);
+    Camera camera(aspect_ratio, field_of_view, img_width, img_height, Point3(0.0, 2.0, 0.0), -M_PI / 4.0, 0.0, 0.0);
 
     // number of ray per pixel
     float n_rays_per_pixel = 10;
@@ -60,7 +75,7 @@ int main() {
             auto current_color = Color();
             for (int k = 0; k < n_rays_per_pixel; k++) {
                 auto ray = camera.create_ray(float(i) + generate_random_float(0.0, 1.0), float(j) + generate_random_float(0.0, 1.0));
-                current_color = current_color + ray_cast(ray, scene, 3, j, i);
+                current_color = current_color + ray_cast(ray, scene, 5, j, i);
             }
             current_color = current_color / n_rays_per_pixel;
             current_color = sqrt_vector(current_color); // gamma correction (1/2)

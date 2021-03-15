@@ -2,6 +2,12 @@
 
 #include "material.h"
 
+enum Hit_type {
+    SPHERE,
+    PLANE,
+    CUBE
+};
+
 struct Hit_point {
     Hit_point() {}
     Point3 p;
@@ -9,4 +15,5 @@ struct Hit_point {
     float t;
     bool has_hit;
     Material material;
+    Hit_type hit_type;
 };
