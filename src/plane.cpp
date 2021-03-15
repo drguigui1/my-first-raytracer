@@ -59,7 +59,6 @@ bool Plane::hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts) {
     hit_pts.t = t;
     hit_pts.p = intersect_pts;
     hit_pts.material = this->_material;
-    hit_pts.hit_type = PLANE;
 
     return true;
 }

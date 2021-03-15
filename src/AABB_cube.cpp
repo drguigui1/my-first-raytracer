@@ -94,7 +94,6 @@ bool AABB_cube::hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts
     hit_pts.p = ray.ray_at(tmin);
     hit_pts.t = tmin;
     hit_pts.material = this->_material;
-    hit_pts.hit_type = CUBE;
 
     return true;
 }

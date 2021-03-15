@@ -7,7 +7,7 @@ Triangle::Triangle(Point3 p0, Point3 p1, Point3 p2, Material material) {
     this->_material = material;
 
     // compute edges
-    this->_edge0 = p1 - p2;
+    this->_edge0 = p1 - p0;
     this->_edge1 = p2 - p1;
     this->_edge2 = p0 - p2;
 
@@ -15,16 +15,27 @@ Triangle::Triangle(Point3 p0, Point3 p1, Point3 p2, Material material) {
     this->_normal = unit_vector(cross_product(this->_edge0, p2 - p0));
 }
 
-bool Triangle::hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts) {
+bool Triangle::hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts,
+                   int i, int j) {
     // check if ray is parallele
     float dot_dir_n = dot_product(ray.get_direction(), this->_normal);
 
-    if (dot_dir_n < 1e-4) {
+    if (std::abs(dot_dir_n) < 1e-5) {
         return false;
     }
 
+    //std::cout << "AFTER\n";
+    //std::cout << ray.get_direction() << '\n';
+    //std::cout << this->_normal << '\n';
+
     // t intersection value
-    float t = (-dot_product(this->_normal, ray.get_origin()) + dot_product(this->_p0, this->_normal)) / dot_dir_n;
+    float t;
+    if (dot_dir_n > 0) {
+        t = (-dot_product(this->_normal, ray.get_origin()) + dot_product(this->_p0, this->_normal)) / dot_dir_n;
+    } else {
+        t = (dot_product(this->_normal, ray.get_origin()) + dot_product(this->_p0, this->_normal)) / dot_dir_n;
+    }
+    //std::cout << "t: " << t << "\n\n";
 
     if (t < 0) {
         return false;
@@ -65,10 +76,24 @@ bool Triangle::hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts)
     t -= 1e-3;
     p = ray.ray_at(t);
 
-    hit_pts.normal = this->_normal;
+
+    Vector3 n;
+    if (dot_dir_n > 0) {
+        //std::cout << "BEFORE\n";
+        //std::cout << this->_normal << '\n';
+        n = this->_normal * -1.0;
+    } else {
+        n = this->_normal;
+    }
+
+    hit_pts.normal = n;
     hit_pts.p = p;
     hit_pts.t = t;
     hit_pts.material = this->_material;
+
+    std::cout << "HIT:\n";
+    //std::cout << i << '\n';
+    //std::cout << j << "\n\n";
 
     return true;
 }

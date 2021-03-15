@@ -8,7 +8,8 @@ class Triangle {
     public:
         Triangle(Point3 p0, Point3 p1, Point3 p2, Material material);
 
-        bool hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts);
+        bool hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts,
+                int i, int j);
     private:
         Point3 _p0;
         Point3 _p1;

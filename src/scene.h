@@ -21,8 +21,9 @@ class Scene {
             _spheres(spheres),
             _planes(planes),
             _aabb_cubes(aabb_cube),
-            _lights(lights),
-            _background_img(load_image(background)) {}
+            _triangles(triangles),
+            _lights(lights) {}
+            //_background_img(load_image(background)) {}
         Scene(Sphere s);
 
         std::vector<Sphere> get_spheres() { return  this->_spheres; }

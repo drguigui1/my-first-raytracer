@@ -43,7 +43,6 @@ bool Sphere::hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts) {
     hit_pts.p = ray.ray_at(root);
     hit_pts.normal = unit_vector(hit_pts.p - this->_center);
     hit_pts.material = this->_material;
-    hit_pts.hit_type = SPHERE;
 
     return true;
 }

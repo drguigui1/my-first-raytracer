@@ -83,7 +83,7 @@ Hit_point hit_objects(Scene scene, const Ray &ray, int i, int j) {
 
     // Triangles
     for (int l = 0; l < triangles.size(); ++l) {
-        if (triangles[l].hit(ray, 0.001, closest_hit_point, hit_pts)) {
+        if (triangles[l].hit(ray, 0.001, closest_hit_point, hit_pts, i, j)) {
             hit_pts.has_hit = true;
             closest_hit_point = hit_pts.t;
         }
