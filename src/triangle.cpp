@@ -24,18 +24,8 @@ bool Triangle::hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts,
         return false;
     }
 
-    //std::cout << "AFTER\n";
-    //std::cout << ray.get_direction() << '\n';
-    //std::cout << this->_normal << '\n';
-
     // t intersection value
-    float t;
-    if (dot_dir_n > 0) {
-        t = (-dot_product(this->_normal, ray.get_origin()) + dot_product(this->_p0, this->_normal)) / dot_dir_n;
-    } else {
-        t = (dot_product(this->_normal, ray.get_origin()) + dot_product(this->_p0, this->_normal)) / dot_dir_n;
-    }
-    //std::cout << "t: " << t << "\n\n";
+    float t = (dot_product(this->_p0, this->_normal) - dot_product(ray.get_origin(), this->_normal)) / dot_dir_n;
 
     if (t < 0) {
         return false;
@@ -76,24 +66,10 @@ bool Triangle::hit(const Ray &ray, float t_min, float t_max, Hit_point &hit_pts,
     t -= 1e-3;
     p = ray.ray_at(t);
 
-
-    Vector3 n;
-    if (dot_dir_n > 0) {
-        //std::cout << "BEFORE\n";
-        //std::cout << this->_normal << '\n';
-        n = this->_normal * -1.0;
-    } else {
-        n = this->_normal;
-    }
-
-    hit_pts.normal = n;
+    hit_pts.normal = (dot_dir_n > 0) ? this->_normal * -1.0 : this->_normal;
     hit_pts.p = p;
     hit_pts.t = t;
     hit_pts.material = this->_material;
-
-    std::cout << "HIT:\n";
-    //std::cout << i << '\n';
-    //std::cout << j << "\n\n";
 
     return true;
 }

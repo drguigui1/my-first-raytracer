@@ -58,27 +58,30 @@ int main() {
     // image
     const int img_width = 600;
     const int img_height = 500;
-    const int aspect_ratio = float(img_width) / float(img_height);
+    const float aspect_ratio = float(img_width) / float(img_height);
     Image img = Image(img_height, img_width);
 
     // camera
-    float field_of_view = M_PI / 2;
+    float field_of_view = M_PI / 2.0;
     Camera camera(aspect_ratio, field_of_view, img_width, img_height, Point3(0.0, 2.0, 0.0), -M_PI / 4.0, 0.0, 0.0);
 
     // number of ray per pixel
     float n_rays_per_pixel = 10;
 
-    std::cout << "height: " << img_height << '\n';
+    //std::cout << "height: " << img_height << '\n';
     for (int j = 0; j < img_height; j++) {
         if (j % 100 == 0)
             std::cout << j << '\n';
         for (int i = 0; i < img_width; i++) {
             auto current_color = Color();
+            auto ray = camera.create_ray(float(i), float(j));
             for (int k = 0; k < n_rays_per_pixel; k++) {
                 auto ray = camera.create_ray(float(i) + generate_random_float(0.0, 1.0), float(j) + generate_random_float(0.0, 1.0));
                 current_color = current_color + ray_cast(ray, scene, 3, j, i);
             }
             current_color = current_color / n_rays_per_pixel;
+            //current_color = ray_cast(ray, scene, 3, i, j)
+            //current_color = Color(0.2, 0.2, 0.2);
             current_color = sqrt_vector(current_color); // gamma correction (1/2)
             auto proper_color = from_float_color_to_int(current_color);
             img.set_pixel(j, i, proper_color);
@@ -87,7 +90,5 @@ int main() {
     std::cout << '\n';
 
     img.SavePPM("test.ppm");
-    //std::cout << scene.get_background_rgb().get_height() << '\n';
-    //std::cout << scene.get_background_rgb().get_width() << '\n';
     return 0;
 }
